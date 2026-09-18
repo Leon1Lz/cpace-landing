@@ -16,7 +16,7 @@ It is completely decoupled from database, authentication, and LMS backend system
   - **Services & Consultancy (`/services`)**: Detailed overview of the 6 core certification & consultancy tracks (CFMS, CMMS, COMS, Business Consultancy, etc.).
   - **Industry Insights & Articles (`/insights`)**: Dynamic listing with category filtering and interactive article reader (`/insights/[slug]`).
   - **Contact & Inquiries (`/#contact`)**: Inquiries form with automated feedback and direct department contact directory.
-- **🔗 Seamless LMS Integration Ready**: Configurable `NEXT_PUBLIC_LMS_URL` so "Login" and "Register" buttons can seamlessly direct users to your Learning Management System when it goes live.
+- **🔗 Seamless Registration & LMS Integration Ready**: The **"Register"** button directly connects applicants to the official CPACE Philippines Linktree (`https://linktr.ee/cpaceph`), and can also be overridden via `NEXT_PUBLIC_REGISTER_URL`. The **"Learning Portal"** button directly opens the CPACE certifications LMS (`https://certifications.cpaceph.com/login`), and can also be overridden via `NEXT_PUBLIC_LMS_URL`.
 
 ---
 
@@ -61,8 +61,9 @@ npm run build
 1. Push this repository to GitHub or GitLab.
 2. Go to [vercel.com](https://vercel.com) and click **"Add New Project"**.
 3. Import this repository.
-4. (Optional) Set the Environment Variable in Vercel:
-   - `NEXT_PUBLIC_LMS_URL`: The URL of your future LMS portal (e.g. `https://portal.cpaceph.com`).
+4. (Optional) Set the Environment Variables in Vercel:
+   - `NEXT_PUBLIC_REGISTER_URL`: Custom registration URL (defaults to `https://linktr.ee/cpaceph`).
+   - `NEXT_PUBLIC_LMS_URL`: Custom LMS portal URL (defaults to `https://certifications.cpaceph.com/login`).
 5. Click **"Deploy"**. Your site will be live in less than 60 seconds!
 
 ### Option 2: Deploy to Netlify
@@ -74,16 +75,44 @@ npm run build
 
 ---
 
-## ⚙️ Environment Variables (Optional)
+## ⚙️ Environment Variables
 
-Create a `.env.local` file in the root directory if you want to link to your LMS portal:
+Create a `.env.local` file in the root directory to configure live email delivery and external portal links:
 
 ```env
-# Optional: URL of your main LMS Portal (when deployed)
-NEXT_PUBLIC_LMS_URL=https://portal.cpaceph.com
+# ==========================================
+# External Portals
+# ==========================================
+# Optional: Registration Link (defaults to official Linktree)
+NEXT_PUBLIC_REGISTER_URL=https://linktr.ee/cpaceph
+
+# Optional: URL of your LMS Portal (defaults to official portal)
+NEXT_PUBLIC_LMS_URL=https://certifications.cpaceph.com/login
+
+# ==========================================
+# Live Email Delivery (SMTP / Nodemailer)
+# ==========================================
+# Gmail / Google Workspace / Custom Mail Server
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=info@cpaceph.com
+SMTP_PASS=your-16-character-app-password
+
+# Email destination for new website inquiries
+CONTACT_EMAIL_TO=info@cpaceph.com
+CONTACT_EMAIL_FROM="CPACE Inquiries" <info@cpaceph.com>
+
+# Optional: Send automatic confirmation email to the sender
+SEND_AUTO_REPLY=true
 ```
 
-If not provided, the Login and Register buttons gracefully point to `/#contact` for enrollment inquiries.
+### 📧 Setting Up Gmail / Google Workspace SMTP:
+1. Log into your Google Account for `info@cpaceph.com`.
+2. Go to **Security** -> **2-Step Verification** (make sure it is turned ON).
+3. Navigate to **App passwords** (or go to [https://myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)).
+4. Create an App password named **"CPACE Website"**.
+5. Copy the generated 16-character code and paste it into `SMTP_PASS` in your `.env.local` or hosting provider environment variables (Vercel/Netlify).
 
 ---
 

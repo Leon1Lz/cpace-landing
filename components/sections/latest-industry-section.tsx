@@ -16,15 +16,39 @@ const iconMap: Record<string, React.ReactNode> = {
 export function LatestIndustrySection() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const articles: Article[] = articlesData
   const featured = articles.find((a) => a.featured) || articles[0]
   const rest = articles.filter((a) => a.id !== featured?.id).slice(0, 6)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSubmitted(true)
+    setIsSubmitting(true)
+    setErrorMessage(null)
+
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email }),
+      })
+
+      const data = await res.json()
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to subscribe. Please try again.")
+      }
+
+      setSubmitted(true)
+      setName("")
+      setEmail("")
+    } catch (err: any) {
+      setErrorMessage(err.message || "Failed to subscribe. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -250,6 +274,13 @@ export function LatestIndustrySection() {
                     <h4 className="text-xl font-bold text-white">Stay in the loop</h4>
                     <p className="text-white/60 text-sm">Get the latest updates delivered straight to your inbox.</p>
                   </div>
+
+                  {errorMessage && (
+                    <div className="p-3 bg-red-500/20 border border-red-400/40 rounded-xl text-red-200 text-xs">
+                      {errorMessage}
+                    </div>
+                  )}
+
                   <div className="space-y-4">
                     <div className="space-y-1.5">
                       <label className="text-sm font-medium text-white/80">Full Name</label>
@@ -258,28 +289,30 @@ export function LatestIndustrySection() {
                         placeholder="Juan Santos Dela Cruz"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        required
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-200 text-sm backdrop-blur-sm"
+                        disabled={isSubmitting}
+                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-200 text-sm backdrop-blur-sm disabled:opacity-50"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-white/80">Email Address</label>
+                      <label className="text-sm font-medium text-white/80">Email Address *</label>
                       <input
                         type="email"
                         placeholder="example@mail.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-200 text-sm backdrop-blur-sm"
+                        disabled={isSubmitting}
+                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-200 text-sm backdrop-blur-sm disabled:opacity-50"
                       />
                     </div>
                   </div>
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold py-4 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] text-base"
+                    disabled={isSubmitting}
+                    className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold py-4 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] text-base rounded-xl disabled:opacity-70"
                   >
                     <Send className="mr-2 w-4 h-4" />
-                    Submit
+                    {isSubmitting ? "Subscribing..." : "Submit"}
                   </Button>
                   <p className="text-white/40 text-xs text-center">
                     We respect your privacy. Unsubscribe at any time.

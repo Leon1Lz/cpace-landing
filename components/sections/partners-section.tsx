@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Handshake, Award, Users, Building, Star, ArrowRight } from "lucide-react"
+import { cpaceStats } from "@/data/stats"
 
 export function PartnersSection() {
   return (
@@ -47,7 +48,7 @@ export function PartnersSection() {
                   </p>
                   <Link href="/#contact">
                     <Button className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                      Contact us
+                      Contact Us
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
@@ -61,29 +62,29 @@ export function PartnersSection() {
                         <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mx-auto mb-3">
                           <Building className="w-6 h-6 text-white" />
                         </div>
-                        <div className="text-2xl font-bold text-gray-900">500+</div>
+                        <div className="text-2xl font-bold text-gray-900">{cpaceStats.institutionalPartners.value}</div>
                         <div className="text-sm text-gray-600">Partners</div>
                       </div>
                       <div className="text-center">
                         <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-3">
                           <Users className="w-6 h-6 text-white" />
                         </div>
-                        <div className="text-2xl font-bold text-gray-900">50K+</div>
+                        <div className="text-2xl font-bold text-gray-900">{cpaceStats.certifiedProfessionals.value}</div>
                         <div className="text-sm text-gray-600">Professionals</div>
                       </div>
                       <div className="text-center">
                         <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-3">
                           <Award className="w-6 h-6 text-white" />
                         </div>
-                        <div className="text-2xl font-bold text-gray-900">1000+</div>
+                        <div className="text-2xl font-bold text-gray-900">{cpaceStats.programsOffered.value}</div>
                         <div className="text-sm text-gray-600">Programs</div>
                       </div>
                       <div className="text-center">
                         <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-3">
                           <Star className="w-6 h-6 text-white" />
                         </div>
-                        <div className="text-2xl font-bold text-gray-900">4.9/5</div>
-                        <div className="text-sm text-gray-600">Rating</div>
+                        <div className="text-2xl font-bold text-gray-900">{cpaceStats.successRate.value}</div>
+                        <div className="text-sm text-gray-600">Success Rate</div>
                       </div>
                     </div>
                   </div>
@@ -103,7 +104,7 @@ export function PartnersSection() {
                     <img 
                       src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80"
                       alt="Branded Training Programs"
-                      className="w-full h-48 object-cover rounded-xl mb-6"
+                      className="w-full h-48 object-cover rounded-xl mb-6 shadow-sm"
                     />
                     <div className="space-y-4">
                       <div className="flex items-center gap-3">
@@ -139,7 +140,7 @@ export function PartnersSection() {
                   </p>
                   <Link href="/#contact">
                     <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                      contact us
+                      Contact Us
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>

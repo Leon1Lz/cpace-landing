@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { BookOpen, Target, Award, TrendingUp, Users, ArrowRight, CheckCircle, GraduationCap, Lightbulb, Rocket, Star, Globe } from "lucide-react"
+import { cpaceStats } from "@/data/stats"
 
 export function AboutSection() {
   const benefits = [
@@ -14,10 +15,10 @@ export function AboutSection() {
   ]
 
   const stats = [
-    { value: "10,000+", label: "Graduates", icon: <Users className="w-5 h-5" /> },
-    { value: "95%", label: "Success Rate", icon: <TrendingUp className="w-5 h-5" /> },
-    { value: "50+", label: "Programs", icon: <BookOpen className="w-5 h-5" /> },
-    { value: "500+", label: "Partners", icon: <Globe className="w-5 h-5" /> }
+    { value: cpaceStats.certifiedProfessionals.value, label: "Certified Professionals", icon: <Users className="w-5 h-5" /> },
+    { value: cpaceStats.successRate.value, label: cpaceStats.successRate.label, icon: <TrendingUp className="w-5 h-5" /> },
+    { value: cpaceStats.programsOffered.value, label: "Programs", icon: <BookOpen className="w-5 h-5" /> },
+    { value: cpaceStats.institutionalPartners.value, label: "Partners", icon: <Globe className="w-5 h-5" /> }
   ]
 
   return (

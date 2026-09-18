@@ -41,13 +41,13 @@ export function ContinuingEducationSection() {
             </div>
 
             {/* Enhanced Main Heading */}
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
               <span className="block text-gray-900">Continuing Education &</span>
               <span className="block bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                 Professional Certifications
               </span>
               <span className="block text-gray-900">in the Philippines</span>
-            </h1>
+            </h2>
 
             {/* Enhanced Content */}
             <div className="space-y-3 lg:space-y-4">

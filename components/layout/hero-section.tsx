@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { CheckCircle, Users, Award, BookOpen, ChevronDown, ChevronUp } from "lucide-react"
+import { cpaceStats } from "@/data/stats"
 
 export function HeroSection() {
   const [showDetails, setShowDetails] = useState(false)
@@ -60,31 +61,31 @@ export function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/about">
                 <Button 
-                  className="bg-white text-emerald-700 hover:bg-gray-100 font-semibold px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  className="bg-white text-emerald-800 hover:bg-emerald-50 font-bold px-7 py-3.5 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 rounded-xl"
                 >
                   LEARN MORE
                 </Button>
               </Link>
               <Link href="/services">
-                <Button variant="ghost" className="border-2 border-white/30 text-white hover:bg-white/10 hover:text-white hover:border-white/50 font-semibold px-6 py-3 transition-all duration-300 transform hover:scale-105 backdrop-blur-sm">
+                <Button variant="ghost" className="border-2 border-white/40 text-white hover:bg-white/15 hover:text-white hover:border-white/70 font-semibold px-7 py-3.5 transition-all duration-300 transform hover:scale-105 backdrop-blur-sm rounded-xl">
                   Explore Programs
                 </Button>
               </Link>
             </div>
 
             {/* Trust Indicators */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="flex flex-wrap items-center gap-5 pt-2">
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-emerald-400" />
-                <span className="text-xs text-white/80">Certified Programs</span>
+                <span className="text-xs font-medium text-white/90">Certified Programs</span>
               </div>
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-emerald-400" />
-                <span className="text-xs text-white/80">Expert Instructors</span>
+                <span className="text-xs font-medium text-white/90">Expert Instructors</span>
               </div>
               <div className="flex items-center gap-2">
                 <Award className="h-4 w-4 text-emerald-400" />
-                <span className="text-xs text-white/80">Industry Recognized</span>
+                <span className="text-xs font-medium text-white/90">Industry Recognized</span>
               </div>
             </div>
           </div>
@@ -94,17 +95,17 @@ export function HeroSection() {
             {/* Glass Morphism Main Card */}
             <div className="relative group">
               {/* Background Glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/20 to-teal-600/20 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/25 to-teal-500/25 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
               
               {/* Main Card */}
-              <div className="relative bg-white/10 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 p-6 group-hover:shadow-2xl transition-all duration-500 transform hover:scale-105">
+              <div className="relative bg-slate-900/60 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 p-7 lg:p-8 transition-all duration-500">
                 <div className="space-y-6">
                   {/* Premium Header */}
                   <div className="text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-400/20 to-teal-400/20 rounded-xl mb-4 shadow-md group-hover:shadow-lg transition-shadow backdrop-blur-sm border border-white/10">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500/30 to-teal-500/30 rounded-2xl mb-4 shadow-inner backdrop-blur-md border border-emerald-400/30">
                       <BookOpen className="h-8 w-8 text-emerald-300" />
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">
+                    <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-md">
                       Continuing Education & Professional Certifications
                     </h3>
                     <p className="text-white/80 leading-relaxed text-sm">
@@ -113,66 +114,66 @@ export function HeroSection() {
                   </div>
 
                   {/* Premium Features */}
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-3 group/item">
-                      <div className="w-6 h-6 bg-gradient-to-br from-emerald-400/20 to-teal-400/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1 group-hover/item:scale-110 transition-transform backdrop-blur-sm border border-white/10">
+                  <div className="space-y-3.5">
+                    <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                      <div className="w-7 h-7 bg-emerald-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 border border-emerald-400/20">
                         <CheckCircle className="h-4 w-4 text-emerald-300" />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-white text-base mb-1">Powerful Programs</h4>
-                        <p className="text-white/70 leading-relaxed text-sm">Relevant programs designed to equip you with insights and abilities</p>
+                        <h4 className="font-semibold text-white text-sm">Powerful Programs</h4>
+                        <p className="text-white/70 text-xs leading-relaxed">Relevant programs designed to equip you with insights and abilities</p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-3 group/item">
-                      <div className="w-6 h-6 bg-gradient-to-br from-emerald-400/20 to-teal-400/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1 group-hover/item:scale-110 transition-transform backdrop-blur-sm border border-white/10">
+                    <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                      <div className="w-7 h-7 bg-emerald-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 border border-emerald-400/20">
                         <CheckCircle className="h-4 w-4 text-emerald-300" />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-white text-base mb-1">Lead & Innovate</h4>
-                        <p className="text-white/70 leading-relaxed text-sm">Thrive in today's competitive professional landscape</p>
+                        <h4 className="font-semibold text-white text-sm">Lead & Innovate</h4>
+                        <p className="text-white/70 text-xs leading-relaxed">Thrive in today's competitive professional landscape</p>
                       </div>
                     </div>
-                    <div className="flex items-start gap-3 group/item">
-                      <div className="w-6 h-6 bg-gradient-to-br from-emerald-400/20 to-teal-400/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-1 group-hover/item:scale-110 transition-transform backdrop-blur-sm border border-white/10">
+                    <div className="flex items-start gap-3.5 p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                      <div className="w-7 h-7 bg-emerald-500/20 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 border border-emerald-400/20">
                         <CheckCircle className="h-4 w-4 text-emerald-300" />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-white text-base mb-1">Stay Relevant</h4>
-                        <p className="text-white/70 leading-relaxed text-sm">In the fast-evolving landscape, staying relevant is a necessity</p>
+                        <h4 className="font-semibold text-white text-sm">Stay Relevant</h4>
+                        <p className="text-white/70 text-xs leading-relaxed">In the fast-evolving landscape, staying relevant is a necessity</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Premium CTA */}
                   <Link href="/services">
-                    <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-3 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                    <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold py-3.5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
                       Start Your Journey
                     </Button>
                   </Link>
                 </div>
               </div>
 
-              {/* Premium Floating Cards */}
-              <div className="absolute -top-4 -right-4 bg-white/10 backdrop-blur-lg rounded-xl shadow-lg border border-white/20 p-3 transform rotate-3 hover:rotate-6 transition-all duration-300 group">
+              {/* Floating Badges */}
+              <div className="absolute -top-4 -right-4 bg-slate-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-emerald-400/30 p-3.5 transform rotate-2 hover:rotate-0 transition-all duration-300">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-400/20 to-blue-400/20 rounded-lg flex items-center justify-center shadow-md backdrop-blur-sm border border-white/10">
-                    <Users className="h-5 w-5 text-cyan-300" />
+                  <div className="w-9 h-9 bg-emerald-500/20 rounded-xl flex items-center justify-center border border-emerald-400/30">
+                    <Users className="h-4 w-4 text-emerald-300" />
                   </div>
                   <div>
-                    <div className="font-bold text-white text-base">10K+</div>
-                    <div className="text-xs text-white/70">Trusted Professionals</div>
+                    <div className="font-bold text-white text-sm">{cpaceStats.certifiedProfessionals.value}</div>
+                    <div className="text-[11px] text-emerald-200">Certified Pros</div>
                   </div>
                 </div>
               </div>
 
-              <div className="absolute -bottom-4 -left-4 bg-white/10 backdrop-blur-lg rounded-xl shadow-lg border border-white/20 p-3 transform -rotate-3 hover:-rotate-6 transition-all duration-300 group">
+              <div className="absolute -bottom-4 -left-4 bg-slate-900/80 backdrop-blur-xl rounded-2xl shadow-xl border border-teal-400/30 p-3.5 transform -rotate-2 hover:rotate-0 transition-all duration-300">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-emerald-400/20 to-teal-400/20 rounded-lg flex items-center justify-center shadow-md backdrop-blur-sm border border-white/10">
-                    <Award className="h-5 w-5 text-emerald-300" />
+                  <div className="w-9 h-9 bg-teal-500/20 rounded-xl flex items-center justify-center border border-teal-400/30">
+                    <Award className="h-4 w-4 text-teal-300" />
                   </div>
                   <div>
-                    <div className="font-bold text-white text-base">95%</div>
-                    <div className="text-xs text-white/70">Career Advancement</div>
+                    <div className="font-bold text-white text-sm">{cpaceStats.chraPassers.value}</div>
+                    <div className="text-[11px] text-teal-200">CHRA™ Passers</div>
                   </div>
                 </div>
               </div>

@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Award, Briefcase, BookOpen, Users, TrendingUp, Presentation, ArrowRight, Star, Zap, GraduationCap, CheckCircle } from "lucide-react"
+import { cpaceStats } from "@/data/stats"
 
 const services = [
   {
@@ -80,9 +81,9 @@ const services = [
 ]
 
 const stats = [
-  { value: "6+", label: "Service Categories", icon: <Zap className="w-5 h-5" /> },
-  { value: "50+", label: "Programs Available", icon: <BookOpen className="w-5 h-5" /> },
-  { value: "10K+", label: "Professionals Served", icon: <Users className="w-5 h-5" /> },
+  { value: cpaceStats.serviceCategories.value, label: cpaceStats.serviceCategories.label, icon: <Zap className="w-5 h-5" /> },
+  { value: cpaceStats.programsOffered.value, label: cpaceStats.programsOffered.label, icon: <BookOpen className="w-5 h-5" /> },
+  { value: cpaceStats.certifiedProfessionals.value, label: "Professionals Served", icon: <Users className="w-5 h-5" /> },
   { value: "100%", label: "Industry Recognized", icon: <Award className="w-5 h-5" /> },
 ]
 

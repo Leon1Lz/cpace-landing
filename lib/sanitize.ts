@@ -1,4 +1,4 @@
-import DOMPurify from "isomorphic-dompurify"
+import DOMPurify from "dompurify"
 
 /**
  * Standard rich-text sanitization.
@@ -7,6 +7,9 @@ import DOMPurify from "isomorphic-dompurify"
  */
 export function sanitizeHtml(dirty: string): string {
   if (!dirty) return ""
+  if (typeof window === "undefined") {
+    return dirty.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+  }
   return DOMPurify.sanitize(dirty, {
     ALLOWED_TAGS: [
       "p", "br", "strong", "em", "u", "s", "strike", "del",
@@ -32,6 +35,9 @@ export function sanitizeHtml(dirty: string): string {
  */
 export function stripTags(dirty: string): string {
   if (!dirty) return ""
+  if (typeof window === "undefined") {
+    return dirty.replace(/<[^>]*>?/gm, "")
+  }
   return DOMPurify.sanitize(dirty, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] })
 }
 
