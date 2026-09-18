@@ -77,7 +77,9 @@ npm run build
 
 ## ⚙️ Environment Variables
 
-Create a `.env.local` file in the root directory to configure live email delivery and external portal links:
+Create a `.env.local` file in the root directory to configure live email delivery and external portal links. Contact and newsletter forms require SMTP: without it, they return an unavailable error and retain the entered text instead of reporting a submission that was never delivered. `SMTP_PASSWORD` is also accepted when `SMTP_PASS` is unset.
+
+On a hosted deployment, set these values in the hosting provider's environment settings and redeploy. A local `.env.local` file is not uploaded to GitHub. SMTP acceptance confirms the mail server accepted the notification; it does not guarantee inbox delivery.
 
 ```env
 # ==========================================

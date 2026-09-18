@@ -1,5 +1,7 @@
 "use client"
 
+import { submitPublicForm } from "@/lib/public-form-client"
+
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -30,22 +32,13 @@ export function LatestIndustrySection() {
     setErrorMessage(null)
 
     try {
-      const res = await fetch("/api/newsletter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email }),
-      })
-
-      const data = await res.json()
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to subscribe. Please try again.")
-      }
+      await submitPublicForm("/api/newsletter", { name, email })
 
       setSubmitted(true)
       setName("")
       setEmail("")
-    } catch (err: any) {
-      setErrorMessage(err.message || "Failed to subscribe. Please try again.")
+    } catch (err: unknown) {
+      setErrorMessage(err instanceof Error ? err.message : "Failed to subscribe. Please try again.")
     } finally {
       setIsSubmitting(false)
     }

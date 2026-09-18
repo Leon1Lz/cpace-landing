@@ -1,73 +1,33 @@
 import { NextResponse } from "next/server"
-import nodemailer from "nodemailer"
-
-interface ContactPayload {
-  name: string
-  email: string
-  phone?: string
-  program?: string
-  message: string
-}
+import { getPublicFormSmtp, createPublicFormTransport } from "@/lib/public-form-smtp"
+import { parseContact, PublicFormValidationError } from "../../../lib/public-form-validation"
+import { escapeHtmlText } from "../../../lib/escape-html"
+import { getClientIp, rateLimit } from "@/lib/rate-limit"
 
 export async function POST(request: Request) {
   try {
-    const body: ContactPayload = await request.json()
-    const { name, email, phone, program, message } = body
+    const limit = rateLimit(`contact:${getClientIp(request)}`, 5, 15 * 60 * 1000)
+    if (!limit.success) return NextResponse.json({ error: "Too many requests" }, { status: 429 })
+    const { name, email, phone, program, message } = parseContact(await request.json())
+    const safeName = escapeHtmlText(name)
+    const safeEmail = escapeHtmlText(email)
+    const safePhone = escapeHtmlText(phone || "Not provided")
+    const safeProgram = escapeHtmlText(program || "General Inquiry")
+    const safeMessage = escapeHtmlText(message)
 
-    // Validation
-    if (!name || !email || !message) {
-      return NextResponse.json(
-        { error: "Name, email, and message are required fields." },
-        { status: 400 }
-      )
-    }
-
-    // Email format validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: "Please provide a valid email address." },
-        { status: 400 }
-      )
-    }
-
-    const host = process.env.SMTP_HOST
-    const port = parseInt(process.env.SMTP_PORT || "587", 10)
-    const user = process.env.SMTP_USER
-    const pass = process.env.SMTP_PASS
-    const secure = process.env.SMTP_SECURE === "true" || port === 465
+    const smtp = getPublicFormSmtp()
     const recipientEmail = process.env.CONTACT_EMAIL_TO || "info@cpaceph.com"
-    const fromEmail = process.env.CONTACT_EMAIL_FROM || user || `"CPACE Inquiries" <noreply@cpaceph.com>`
+    const fromEmail = process.env.CONTACT_EMAIL_FROM || smtp?.auth.user || '"CPACE" <noreply@cpaceph.com>'
 
-    // If SMTP is not yet configured, log the payload and return a helpful notice
-    if (!host || !user || !pass) {
-      console.warn("⚠️ SMTP credentials not configured in environment variables. Email simulation logged:")
-      console.log({
-        to: recipientEmail,
-        from: `${name} <${email}>`,
-        phone: phone || "Not provided",
-        program: program || "General Inquiry",
-        message,
-        receivedAt: new Date().toISOString()
-      })
-
-      return NextResponse.json({
-        success: true,
-        mock: true,
-        message: "Inquiry received successfully. (Note: Configure SMTP_HOST, SMTP_USER, SMTP_PASS in .env.local to send live emails)."
-      })
+    if (!smtp) {
+      console.warn("Public form delivery is unavailable: SMTP configuration is missing or invalid.")
+      return NextResponse.json(
+        { error: "We could not send your inquiry. Please contact info@cpaceph.com directly or try again later." },
+        { status: 503 },
+      )
     }
 
-    // Create Nodemailer Transporter
-    const transporter = nodemailer.createTransport({
-      host,
-      port,
-      secure,
-      auth: {
-        user,
-        pass,
-      },
-    })
+    const transporter = createPublicFormTransport(smtp)
 
     const submittedDate = new Date().toLocaleString("en-US", {
       timeZone: "Asia/Manila",
@@ -107,19 +67,19 @@ export async function POST(request: Request) {
         <div class="content">
           <div class="field-group">
             <div class="label">Program of Interest</div>
-            <div class="value"><span class="badge">${program || "General Inquiry"}</span></div>
+            <div class="value"><span class="badge">${safeProgram}</span></div>
           </div>
           <div class="field-group">
             <div class="label">Sender Name</div>
-            <div class="value">${name}</div>
+            <div class="value">${safeName}</div>
           </div>
           <div class="field-group">
             <div class="label">Email Address</div>
-            <div class="value"><a href="mailto:${email}" style="color:#059669;text-decoration:none;">${email}</a></div>
+            <div class="value"><a href="mailto:${safeEmail}" style="color:#059669;text-decoration:none;">${safeEmail}</a></div>
           </div>
           <div class="field-group">
             <div class="label">Contact Number</div>
-            <div class="value">${phone || "Not provided"}</div>
+            <div class="value">${safePhone}</div>
           </div>
           <div class="field-group">
             <div class="label">Date Received</div>
@@ -127,11 +87,11 @@ export async function POST(request: Request) {
           </div>
           <div class="field-group">
             <div class="label">Message / Inquiry</div>
-            <div class="message-box">${message}</div>
+            <div class="message-box">${safeMessage}</div>
           </div>
           <div style="text-align: center;">
             <a href="mailto:${email}?subject=RE: CPACE Inquiry - ${encodeURIComponent(program || "General Inquiry")}" class="reply-btn">
-              Reply to ${name}
+              Reply to ${safeName}
             </a>
           </div>
         </div>
@@ -145,14 +105,18 @@ export async function POST(request: Request) {
     `
 
     // Send Main Notification Email to CPACE Admissions
-    await transporter.sendMail({
+    const delivery = await transporter.sendMail({
       from: fromEmail,
       to: recipientEmail,
-      replyTo: `${name} <${email}>`,
+      replyTo: { name, address: email },
       subject: `[New Inquiry] ${name} — ${program || "General Inquiry"}`,
       text: `New inquiry from ${name} (${email}, ${phone || "No phone"}):\n\nProgram: ${program || "General Inquiry"}\n\nMessage:\n${message}\n\nSubmitted on: ${submittedDate}`,
       html: htmlEmail,
     })
+
+    if (!delivery.accepted?.length || delivery.rejected?.length) {
+      throw new Error("The mail server did not accept the notification recipient")
+    }
 
     // Optionally send auto-acknowledgment to sender if SEND_AUTO_REPLY is true
     if (process.env.SEND_AUTO_REPLY === "true") {
@@ -177,9 +141,9 @@ export async function POST(request: Request) {
               <h1>Thank You for Contacting CPACE</h1>
             </div>
             <div class="content">
-              <p>Dear <strong>${name}</strong>,</p>
+              <p>Dear <strong>${safeName}</strong>,</p>
               <p>Thank you for reaching out to the <strong>Center for Professional Advancement and Continuing Education, Inc. (CPACE Philippines)</strong>.</p>
-              <p>We have received your inquiry regarding <strong>${program || "our programs"}</strong>. One of our admissions advisors or program specialists will review your message and get in touch with you within 24 to 48 hours.</p>
+              <p>We have received your inquiry regarding <strong>${safeProgram}</strong>. One of our admissions advisors or program specialists will review your message and get in touch with you within 24 to 48 hours.</p>
               <p>In the meantime, you can explore our latest certifications, announcements, and registration links at <a href="https://linktr.ee/cpaceph" style="color:#059669; font-weight:600;">linktr.ee/cpaceph</a> or access the <a href="https://certifications.cpaceph.com/login" style="color:#059669; font-weight:600;">Learning Portal</a>.</p>
               <br>
               <p>Best regards,<br><strong>CPACE Philippines Team</strong><br>Admissions & Support</p>
@@ -200,8 +164,8 @@ export async function POST(request: Request) {
           text: `Dear ${name},\n\nThank you for reaching out to CPACE Philippines regarding ${program || "our programs"}. Our team will review your message and respond within 24-48 hours.\n\nBest regards,\nCPACE Philippines Team\ninfo@cpaceph.com`,
           html: acknowledgmentHtml,
         })
-      } catch (autoReplyErr) {
-        console.error("Auto-reply notice: Failed to deliver auto-reply to user, but main notification was sent.", autoReplyErr)
+      } catch {
+        console.error("Contact auto-reply failed; the main notification was accepted.")
       }
     }
 
@@ -209,12 +173,12 @@ export async function POST(request: Request) {
       success: true,
       message: "Your inquiry has been submitted and sent successfully.",
     })
-  } catch (error: any) {
-    console.error("Error sending contact email:", error)
+  } catch (error: unknown) {
+    if (error instanceof PublicFormValidationError || error instanceof SyntaxError) return NextResponse.json({ error: "Invalid contact details" }, { status: 400 })
+    console.error("Public form email delivery failed.")
     return NextResponse.json(
       {
         error: "Failed to send message. Please try again or contact us directly at info@cpaceph.com.",
-        details: error?.message || "Internal server error",
       },
       { status: 500 }
     )
